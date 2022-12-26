@@ -1,0 +1,30 @@
+{
+  "rules": {
+    ".read": "auth != null",
+    ".write": "auth != null",
+    "game": {
+      ".read": "auth != null",
+      ".write": "auth.uid != null
+      && data.child('board').val().length == 16
+      &&  data.child('correct').val().length == 16",
+      
+      "correct": { ".validate": "newData.isString()"},
+      "board": { ".validate": "newData.isString()" },
+      "turnId": { ".validate": "newData.isString()" },
+      "counter": { ".validate": "newData.isNumber()" },
+      "card1": { ".validate": "newData.isNumber()" },
+    	"card2": { ".validate": "newData.isNumber()" },
+      "$other" :{".validate": false}
+    },
+    "players": {
+      "$uid": {
+        ".write": "auth != null && auth.uid == $uid",
+        "id": {".validate": "newData.isString()" },
+        "name": {".validate": "newData.isString()" },
+        "points": { ".validate": "newData.isNumber()" },
+        "$other": { ".validate": false }
+      }
+    },
+    "$others": {".validate": false}
+  }
+}
