@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { View, FlatList, StyleSheet } from "react-native";
 import PlayingCard from "../components/PlayingCard";
+import { newBoard } from "../assets/board";
 
 const GameBoard = () => {
-  const board = 'ptwdatpscdzswcaz';
+  const board = newBoard();
   const [cards, setCards] = useState(Array(16).fill(0));
 
   const renderItem = ({ index }) => (
@@ -26,7 +27,6 @@ const GameBoard = () => {
     </View>
   );
 };
-
 
 const styles = StyleSheet.create({
   container: {

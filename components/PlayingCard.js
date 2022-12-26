@@ -16,22 +16,18 @@ const map = {
 };
 
 const PlayingCard = ({ index, cardIcon, cardColour }) => {
-
   const move = useCallback(() => {
     console.log("clicked", index);
   }, []);
 
   return (
     <View>
-      <Card
-          onPress={move}
-          style={{ backgroundColor: cardStates[cardColour] }}
-        >
-          <MaterialIcons
-            name={ map[cardIcon]}
-            style={{ transform: [{ scale: 2 }] }}
-          />
-        </Card>
+      <Card onPress={move} style={{ backgroundColor: cardStates[cardColour] }}>
+        <MaterialIcons
+          name={map[cardIcon]}
+          style={{ transform: [{ scale: 2 }] }}
+        />
+      </Card>
     </View>
   );
 };

@@ -8,7 +8,7 @@ const App = () => {
     <View style={styles.container}>
       <View style={{ margin: StatusBar.currentHeight + 15 || 15 }} />
       <Text style={styles.paragraph}>🐢 User: {name} 🎯</Text>
-      <GameBoard/>
+      <GameBoard />
     </View>
   );
 };
