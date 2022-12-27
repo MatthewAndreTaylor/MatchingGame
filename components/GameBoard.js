@@ -29,6 +29,7 @@ const GameBoard = () => {
           board: newBoard(),
           counter: 0,
         });
+        return;
       }
 
       let game = snapshot.val() || {};
@@ -72,7 +73,7 @@ const GameBoard = () => {
       // Reset the board when complete
       if (game.correct == "1111111111111111") {
         setTimeout(() => {
-          update(gameRef, { correct: "0000000000000000", board: newBoard() });
+          update(gameRef, { correct: "0000000000000000", board: newBoard(), counter: 0 });
           setCards(Array(16).fill(0));
         }, 1000);
       }

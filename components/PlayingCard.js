@@ -2,7 +2,7 @@ import React, { useCallback, useRef, useEffect } from "react";
 import { View, Animated } from "react-native";
 import styled from "styled-components/native";
 import { MaterialIcons } from "@expo/vector-icons";
-import { ref, update, child } from "firebase/database";
+import { ref, update, child, onValue } from "firebase/database";
 import { useObjectVal } from "react-firebase-hooks/database";
 import { db } from "../assets/firebase.config";
 
