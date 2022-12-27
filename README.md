@@ -7,6 +7,10 @@ https://user-images.githubusercontent.com/100451342/209601011-384933fa-844a-45b4
 ## ⚡ Start
 
 Run the `npm install` command and `expo start` to start the app.
+```bash
+npm install
+expo start
+```
 
 ## 🚀 Project setup
 
