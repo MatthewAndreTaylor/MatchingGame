@@ -1,8 +1,12 @@
-import React, { useCallback, useRef } from "react";
+import React, { useCallback, useRef, useEffect } from "react";
 import { View, Animated } from "react-native";
 import styled from "styled-components/native";
 import { MaterialIcons } from "@expo/vector-icons";
+import { ref, update, child } from "firebase/database";
+import { useObjectVal } from "react-firebase-hooks/database";
+import { db } from "../assets/firebase.config";
 
+const gameRef = ref(db, `game`);
 const cardStates = { 0: "#ffeb3b", 1: "#FFB300", 2: "#f15f5f", 3: "#1fd655" };
 const map = {
   d: "beach-access",
@@ -18,12 +22,24 @@ const map = {
 const PlayingCard = ({ index, cardIcon, cardColour }) => {
   const anim = useRef(new Animated.ValueXY());
 
-  const move = useCallback(() => {
-    console.log("clicked", index);
-    Animated.loop(shake, { iterations: 1 }).start();
-  }, []);
+  const [counter] = useObjectVal(child(gameRef, "counter"));
 
-  // Shake animation sequencec
+  // Process a move
+  const move = useCallback(() => {
+    if (counter === 0) {
+      update(gameRef, { card1: index, counter: 1 });
+    } else {
+      update(gameRef, { card2: index, counter: 0 });
+      update(gameRef, { card1: {}, card2: {} });
+    }
+  }, [counter]);
+
+  useEffect(() => {
+    // Shake if the card is red
+    if (cardColour === 2) Animated.loop(shake, { iterations: 1 }).start();
+  }, [cardColour]);
+
+  // Shake animation sequence
   const shake = Animated.sequence(
     [
       Animated.timing(anim.current, {
