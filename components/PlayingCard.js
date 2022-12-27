@@ -19,20 +19,35 @@ const map = {
   t: "free-breakfast",
 };
 
+let players = {};
+const allPlayersRef = ref(db, `players`);
+onValue(allPlayersRef, (snapshot) => {
+  players = snapshot.val() || {};
+  // Update turn when a new player joins (new)
+  update(gameRef, { turnId: global.playerId });
+});
+
 const PlayingCard = ({ index, cardIcon, cardColour }) => {
   const anim = useRef(new Animated.ValueXY());
 
+  const [turn] = useObjectVal(child(gameRef, "turnId"));
   const [counter] = useObjectVal(child(gameRef, "counter"));
 
   // Process a move
   const move = useCallback(() => {
+    // You cannot not move if it is not your turn
+    if (turn != global.playerId){
+      Animated.loop(shake, { iterations: 1 }).start();
+      return;
+    }
+
     if (counter === 0) {
       update(gameRef, { card1: index, counter: 1 });
     } else {
       update(gameRef, { card2: index, counter: 0 });
-      update(gameRef, { card1: {}, card2: {} });
+      update(gameRef, { card1: {}, card2: {}, turnId: nextPlayer(turn) });
     }
-  }, [counter]);
+  }, [counter, turn]);
 
   useEffect(() => {
     // Shake if the card is red
@@ -114,6 +129,15 @@ const PlayingCard = ({ index, cardIcon, cardColour }) => {
     </View>
   );
 };
+
+// Return the next playerId
+function nextPlayer(curr) {
+  let keys = Object.keys(players);
+  let nextIndex = keys.indexOf(curr) + 1;
+  let nextItem = keys[nextIndex];
+  if (nextItem != null) return nextItem;
+  return keys[0];
+}
 
 const Card = styled.Pressable`
     margin: 5px;
