@@ -1,9 +1,30 @@
 import * as React from "react";
-import { Text, View, StyleSheet, StatusBar } from "react-native";
+import { Platform, AppState, Text, View, StyleSheet, StatusBar } from "react-native";
 import GameBoard from "./components/GameBoard";
 import { name } from "./assets/random-name";
+import { remove } from 'firebase/database';
 
 const App = () => {
+  // From the react naive docs
+  const appState = React.useRef(AppState.currentState);
+  const [appStateVisible, setAppStateVisible] = React.useState(appState.current);
+
+  React.useEffect(() => {
+    const subscription = AppState.addEventListener("change", nextAppState => {
+      if (
+        appState.current.match(/inactive|background/) &&
+        nextAppState === "active"
+      ) {
+        if(Platform.OS === 'web') location.reload();
+      }
+
+      appState.current = nextAppState;
+      setAppStateVisible(appState.current);
+      if(appState.current == 'background') remove(playerRef);
+    });
+    return () => {subscription.remove()};
+  }, []);
+
   return (
     <View style={styles.container}>
       <View style={{ margin: StatusBar.currentHeight + 15 || 15 }} />
